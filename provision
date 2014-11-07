@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+
+echo "Adding repositories"
+
+  # Java
+  add-apt-repository ppa:webupd8team/java
+
+echo "Updating apt-get"
+
+  apt-get update
+
+echo "Installing git command line tools"
+
+  apt-get -qy install git
+  echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
+echo "Installing Postgres and configuring remote connections"
+
+  apt-get -qy install postgresql-9.3
+  sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /etc/postgresql/9.3/main/postgresql.conf
+  sed -i "s/#host    replication     postgres        ::1\/128                 md5/host all all 0.0.0.0\/0 trust/g" /etc/postgresql/9.3/main/pg_hba.conf
+  /etc/init.d/postgresql restart
+
+echo "Installing Ruby Dev Kit"
+
+  apt-get -qy install ruby-dev
+  apt-get -qy install libpq-dev
+
+echo "Installing Ruby Gems"
+
+  gem install sinatra
+  gem install pg
+
+echo "Installing Oracle java 7"
+
+  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+  apt-get install -qy oracle-java8-installer
+  update-java-alternatives -s java-8-oracle
+
+echo "Installing Jruby"
+
+  wget http://jruby.org.s3.amazonaws.com/downloads/1.7.16.1/jruby-bin-1.7.16.1.tar.gz
+  tar zxvf jruby-bin-1.7.16.1.tar.gz
+  export JRUBY_HOME=/home/vagrant/jruby-1.7.16.1
+  export PATH=$JRUBY_HOME/bin:$PATH
+
+cat <<EOF > /etc/environment
+JRUBY_HOME=/home/vagrant/jruby-1.7.16.1
+PATH=$JRUBY_HOME/bin:$PATH
+EOF
+
+source /etc/environment
