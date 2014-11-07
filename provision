@@ -27,11 +27,6 @@ echo "Installing Ruby Dev Kit"
   apt-get -qy install ruby-dev
   apt-get -qy install libpq-dev
 
-echo "Installing Ruby Gems"
-
-  gem install sinatra
-  gem install pg
-
 echo "Installing Oracle java 7"
 
   echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
@@ -51,3 +46,17 @@ PATH=$JRUBY_HOME/bin:$PATH
 EOF
 
 source /etc/environment
+
+echo "Installing Gems (Ruby)"
+
+  ruby -S gem install sinatra
+  ruby -S gem install pg
+
+echo "Installing Gems (JRuby)"
+
+  jruby -S gem install ActiveRecord-JDBC
+
+
+
+  ruby /home/vagrant/apps/ruby.rb
+  jruby /home/vagrant/apps/ruby.rb
