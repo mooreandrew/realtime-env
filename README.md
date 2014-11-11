@@ -3,7 +3,6 @@ Land Registry Vagrant Training Environment
 
 This is a local virtual environment that contains the following:
 
-* Jenkins running on port 8080
 * PostgreSQL running on port 5432
 * A Ruby Sinatra app running on port 4567
 
